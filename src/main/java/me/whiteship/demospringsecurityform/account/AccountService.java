@@ -5,12 +5,15 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccountService implements UserDetailsService {
 
     @Autowired AccountRepository accountRepository;
+
+    @Autowired PasswordEncoder passwordEncoder;
 
     /**
      * param 값인 'username'에 해당하는 user 정보를 'UserDetails' 타입으로 리턴 해야한다.
@@ -33,7 +36,8 @@ public class AccountService implements UserDetailsService {
     public Account createNew(Account account) {
         // TODO {noop}123
         // password encoding 처리
-        account.encodePassword();
+//        account.encodePassword();
+        account.encodePassword(passwordEncoder);
 //        account.setPassword("{noop}" + account.getPassword());
         return this.accountRepository.save(account);
     }
