@@ -10,6 +10,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AccountService implements UserDetailsService {
+    /**
+     * UserDetailsService
+     * user 정보를 UserDetails 타입으로 가져오는 DAO(Data Access Object) 인터페이스.
+     * 구현은 마음대로!
+     *
+     * 실제로 인증처리를 하는 인터페이스는 UserDetailsService가 아닌,
+     * AuthenticationManager이다.
+     */
 
     @Autowired AccountRepository accountRepository;
 
@@ -20,6 +28,11 @@ public class AccountService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        /**
+         * UserDetails
+         * 애플리케이션이 갖고 있는 user 정보와 Spring Security가 사용하는  Authentication 객체 사이의 어댑터
+         */
+
         Account account = accountRepository.findByUsername(username);
 
         if(account == null) {
