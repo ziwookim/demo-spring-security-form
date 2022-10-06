@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
-@Order(Ordered.LOWEST_PRECEDENCE - 15)
+@Order(Ordered.LOWEST_PRECEDENCE - 100)
 //@EnableWebSecurity (생략 가능 - Spring boot 자동 설정이 자동으로 추가 해준다.)
 public class AnotherSecurityConfig extends WebSecurityConfigurerAdapter {
 
