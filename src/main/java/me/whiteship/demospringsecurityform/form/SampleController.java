@@ -39,7 +39,7 @@ public class SampleController {
         model.addAttribute("message", "Hello " + principal.getName());
 
         // SecurityContextHolder 대신 ThreadLocal을 이용해 정의한 'AccountContext'를 활용해서 account를 설정해주었다.
-        AccountContext.setAccountThreadLocal(accountRepository.findByUsername(principal.getName()));
+//        AccountContext.setAccountThreadLocal(accountRepository.findByUsername(principal.getName()));
 
         sampleService.dashboard();
         return "dashboard";

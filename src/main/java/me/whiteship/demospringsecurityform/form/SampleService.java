@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -15,10 +16,18 @@ import java.util.Collection;
 public class SampleService {
 
     public void dashboard() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        System.out.println("=========================");
+        System.out.println(authentication);
+        System.out.println(userDetails.getUsername());
+
         // ThreadLocal 타입의 필드는 별도의 매개변수 없이 AccountContext로 접근 가능하다.
-        Account account = AccountContext.getAccount();
-        System.out.println("=================");
-        System.out.println(account.getUsername());
+//        Account account = AccountContext.getAccount();
+//        System.out.println("=========================");
+//        System.out.println(account.getUsername());
+
+
     }
 
 //    public void dashboard() {
