@@ -3,12 +3,15 @@ package me.whiteship.demospringsecurityform.config;
 import me.whiteship.demospringsecurityform.account.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
 @EnableWebSecurity
+@Order(Ordered.LOWEST_PRECEDENCE - 100)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired AccountService accountService;
@@ -20,7 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // "/info" 모든 requests 허용
                 .mvcMatchers("/admin").hasRole("ADMIN")
                 // "/admin" 은 "ADMIN" 권한 있는 request만 허용
-                .anyRequest().authenticated();
+//                .anyRequest().authenticated();
+                .anyRequest().permitAll();
         // 기타 등등 requests에 대해서는 인증 하기만 하면 된다.
         // .and()
         http.formLogin();
