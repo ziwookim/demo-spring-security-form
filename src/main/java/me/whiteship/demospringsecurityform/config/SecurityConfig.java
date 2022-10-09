@@ -5,9 +5,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.expression.SecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -16,17 +26,38 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired AccountService accountService;
 
+    public SecurityExpressionHandler expressionHandler() {
+//    public AccessDecisionManager accessDecisionManager() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
+
+        DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
+        handler.setRoleHierarchy(roleHierarchy);
+
+//        WebExpressionVoter webExpressionVoter = new WebExpressionVoter();
+//        webExpressionVoter.setExpressionHandler(handler);
+//
+//        // Voter List
+//        List<AccessDecisionVoter<? extends  Object>> voters = Arrays.asList(webExpressionVoter);
+//        return new AffirmativeBased(voters);
+
+        return handler;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .antMatcher("/**")
-                .authorizeHttpRequests()
-                .mvcMatchers("/", "/info", "/account/**").permitAll()
-                // "/info" 모든 requests 허용
-                .mvcMatchers("/admin").hasRole("ADMIN")
-                // "/admin" 은 "ADMIN" 권한 있는 request만 허용
-//                .anyRequest().authenticated();
-                .anyRequest().permitAll();
+
+        http.authorizeRequests()
+                .mvcMatchers("/", "/info", "/account/**", "/signup").permitAll() // 모두 허용
+                .mvcMatchers("/admin").hasRole("ADMIN") // ADMIN 관한이 있어야함
+                .mvcMatchers("/user").hasRole("USER")
+                .anyRequest().authenticated() // 인증만되면 모두 접근 가능
+                .expressionHandler(expressionHandler());
+//                .accessDecisionManager(accessDecisionManager());
+
+        // "/info" 모든 requests 허용
+        // "/admin" 은 "ADMIN" 권한 있는 request만 허용
+        // expressionHandler -> roleHierarchy 적용 (Admin은 User권한보다 상위 권한이다.
         // 기타 등등 requests에 대해서는 인증 하기만 하면 된다.
         // .and()
         http.formLogin();
